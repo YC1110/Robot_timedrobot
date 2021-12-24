@@ -30,7 +30,8 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX m_left_2 = new WPI_VictorSPX(2);
   WPI_VictorSPX m_right_1 = new WPI_VictorSPX(3);
   WPI_VictorSPX m_right_2 = new WPI_VictorSPX(4);
-  //WPI_VictorSPX lift = new WPI_VictorSPX(5);
+  WPI_VictorSPX roll_front = new WPI_VictorSPX(5);
+  WPI_VictorSPX roll_rear = new WPI_VictorSPX(6);
   SpeedControllerGroup m_left = new SpeedControllerGroup(m_left_1, m_left_2);
   SpeedControllerGroup m_right = new SpeedControllerGroup(m_right_1, m_right_2);
   DifferentialDrive drive = new DifferentialDrive(m_left, m_right);
@@ -97,22 +98,25 @@ public class Robot extends TimedRobot {
 
     int POV = controller.getPOV();
     switch(POV){
-      case 0:drive.arcadeDrive(0.6, 0);break;
-      case 45:drive.arcadeDrive(0.7, 0.4);break;
+      case 0:drive.arcadeDrive(0.5, 0);break;
+      case 45:drive.arcadeDrive(0.5, 0.4);break;
       case 90:drive.arcadeDrive(0, 0.5);break;
-      case 135:drive.arcadeDrive(-0.7, -0.4);break;
-      case 180:drive.arcadeDrive(-0.6, 0);break;
-      case 225:drive.arcadeDrive(-0.7, 0.4);break;
+      case 135:drive.arcadeDrive(-0.5, -0.4);break;
+      case 180:drive.arcadeDrive(-0.5, 0);break;
+      case 225:drive.arcadeDrive(-0.5, 0.4);break;
       case 270:drive.arcadeDrive(0, -0.5);break;
-      case 315:drive.arcadeDrive(0.7, -0.4);break;
-      case -1:drive.arcadeDrive(-controller.getY(Hand.kLeft)*0.7, controller.getX(Hand.kRight)*0.7);
+      case 315:drive.arcadeDrive(0.5, -0.4);break;
+      case -1:drive.arcadeDrive(-controller.getY(Hand.kLeft)*0.5, controller.getX(Hand.kRight)*0.6);
     }
-    // if(controller.getTriggerAxis(Hand.kLeft)>0.1)
-    //   lift.set(0.05);
-    // else if(controller.getTriggerAxis(Hand.kRight)>0.1)
-    //   lift.set(-0.05);
-    // else
-    //   lift.set(0);
+    if(controller.getBumper(Hand.kRight))
+      roll_front.set(1);
+    else
+      roll_front.set(0);
+    
+    if(controller.getBumper(Hand.kLeft))
+      roll_rear.set(-1);
+    else
+      roll_rear.set(0);
   }
 
   /** This function is called once when the robot is disabled. */
